@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Regression Simplified</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensuring crisp canvas rendering */
+        canvas {
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4 font-sans text-slate-800">
+
+    <div class="bg-white rounded-2xl shadow-xl max-w-5xl w-full overflow-hidden border border-slate-100">
+
+        <!-- Header -->
+        <div class="bg-white border-b border-slate-100 px-8 py-6">
+            <h1 class="text-3xl font-bold text-slate-900">Linear Regression Explained</h1>
+            <p class="text-slate-500 mt-2">A simple, step-by-step visual guide to understanding how machines learn to
+                draw the line of best fit.</p>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex flex-col md:flex-row p-8 gap-10">
+
+            <!-- Visualization Canvas -->
+            <div class="flex-1 flex flex-col items-center justify-center">
+                <div class="relative bg-slate-50 rounded-xl border border-slate-200 p-4 shadow-inner">
+                    <canvas id="lrCanvas" width="500" height="500"
+                        class="w-full max-w-[450px] h-auto rounded bg-white"></canvas>
+                </div>
+                <div class="text-xs text-slate-400 mt-3 text-center w-full">
+                    X-Axis: e.g., Size of House (sq ft) &nbsp;&nbsp;|&nbsp;&nbsp; Y-Axis: e.g., Price ($)
+                </div>
+            </div>
+
+            <!-- Context & Controls Area -->
+            <div class="flex-1 flex flex-col justify-between">
+
+                <div class="min-h-[250px]">
+                    <!-- Step Indicator -->
+                    <div class="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-sm font-semibold rounded-full mb-4"
+                        id="stepIndicator">
+                        Step 1 of 7
+                    </div>
+
+                    <!-- Dynamic Content -->
+                    <h2 class="text-2xl font-bold text-slate-800 mb-4 transition-all duration-300" id="stepTitle">
+                        Meet the Data
+                    </h2>
+                    <p class="text-slate-600 text-lg leading-relaxed transition-all duration-300" id="stepDescription">
+                        Imagine we have data about houses. The X-axis represents the size of the house, and the Y-axis
+                        is the price. Each blue dot on the graph represents one specific house we know about. Our goal
+                        is to find a pattern.
+                    </p>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="mt-8 flex items-center justify-between border-t border-slate-100 pt-6">
+                    <button id="btnPrev"
+                        class="px-5 py-2.5 bg-white border-2 border-slate-200 text-slate-600 font-semibold rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                        &larr; Previous
+                    </button>
+
+                    <!-- Progress Dots -->
+                    <div class="flex gap-2" id="progressDots">
+                        <!-- Dots injected by JS -->
+                    </div>
+
+                    <button id="btnNext"
+                        class="px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 shadow-md shadow-blue-600/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                        Next Step &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/linear_regression.js"></script>
+</body>
+
+</html>
