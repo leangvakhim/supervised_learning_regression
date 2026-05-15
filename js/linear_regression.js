@@ -2,6 +2,7 @@
 const canvas = document.getElementById('lrCanvas');
 const ctx = canvas.getContext('2d');
 const latexOverlay = document.getElementById('latexOverlay');
+const codeOverlay = document.getElementById('codeOverlay');
 const axisLabels = document.getElementById('axisLabels');
 
 let currentStep = 0;
@@ -102,6 +103,10 @@ const steps = [
     {
         title: "10. The Formulas in Action",
         desc: `Let's apply the math! The formulas use all those x, y, x̄, and ȳ values to calculate the perfect slope and intercept. If a student studies 80 hours: Score = (${stats.m.toFixed(2)} × 80) + ${stats.b.toFixed(2)} = ${predictionY.toFixed(1)}.`
+    },
+    {
+        title: "11. The Python Way",
+        desc: "In reality, Data Scientists don't calculate formulas by hand. They use Python libraries like 'scikit-learn'. Look at the code editor to see how simple it is to train a model and make the exact same prediction using just 6 lines of code!"
     }
 ];
 
@@ -386,7 +391,15 @@ function renderLatex() {
 function renderScene() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Step 10 (Index 9): Show LaTeX overlay, hiding canvas visuals and axis labels
+    // Hide all overlays initially
+    canvas.classList.remove('hidden');
+    axisLabels.classList.remove('opacity-0');
+    latexOverlay.classList.add('hidden');
+    latexOverlay.classList.remove('flex');
+    codeOverlay.classList.add('hidden');
+    codeOverlay.classList.remove('flex');
+
+    // Step 10 (Index 9): Show LaTeX overlay
     if (currentStep === 9) {
         canvas.classList.add('hidden');
         axisLabels.classList.add('opacity-0');
@@ -394,11 +407,14 @@ function renderScene() {
         latexOverlay.classList.add('flex');
         renderLatex();
         return;
-    } else {
-        canvas.classList.remove('hidden');
-        axisLabels.classList.remove('opacity-0');
-        latexOverlay.classList.add('hidden');
-        latexOverlay.classList.remove('flex');
+    }
+    // Step 11 (Index 10): Show Python Code Overlay
+    else if (currentStep === 10) {
+        canvas.classList.add('hidden');
+        axisLabels.classList.add('opacity-0');
+        codeOverlay.classList.remove('hidden');
+        codeOverlay.classList.add('flex');
+        return;
     }
 
     drawAxes();
@@ -455,7 +471,7 @@ function initDots() {
     dotsContainer.innerHTML = '';
     steps.forEach((_, index) => {
         const dot = document.createElement('div');
-        dot.className = `w-2.5 h-2.5 rounded-full transition-colors duration-300 ${index === currentStep ? 'bg-blue-600' : 'bg-slate-200'}`;
+        dot.className = `w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-colors duration-300 ${index === currentStep ? 'bg-blue-600' : 'bg-slate-200'}`;
         dotsContainer.appendChild(dot);
     });
 }
@@ -471,11 +487,11 @@ function updateUI() {
     if (currentStep === steps.length - 1) {
         btnNext.innerText = "Finish";
     } else {
-        btnNext.innerHTML = "Next Step &rarr;";
+        btnNext.innerHTML = "Next &rarr;";
     }
 
     Array.from(dotsContainer.children).forEach((dot, index) => {
-        dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-300 ${index === currentStep ? 'bg-blue-600 w-5' : 'bg-slate-200'}`;
+        dot.className = `h-2 sm:h-2.5 rounded-full transition-all duration-300 ${index === currentStep ? 'bg-blue-600 w-4 sm:w-5' : 'bg-slate-200 w-2 sm:w-2.5'}`;
     });
 
     renderScene();
