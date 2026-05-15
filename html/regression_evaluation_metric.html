@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Regression Evaluation Metrics</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS for LaTeX Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Prism CSS & JS for Code Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
     <style>
         /* Custom animations for dynamic feel */
         .fade-in {
@@ -54,16 +65,23 @@
                 opacity: 0.2;
             }
         }
+
+        /* Prism Custom Overrides for better integration */
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 
 <body class="bg-gray-50 text-slate-800 font-sans min-h-screen flex items-center justify-center p-4 sm:p-8">
 
     <div
-        class="bg-white max-w-5xl w-full rounded-2xl shadow-xl overflow-hidden border border-slate-100 flex flex-col h-[85vh] min-h-[700px]">
+        class="bg-white max-w-6xl w-full rounded-2xl shadow-xl overflow-hidden border border-slate-100 flex flex-col h-[85vh] min-h-[750px]">
 
         <!-- Header & Progress -->
-        <header class="p-6 border-b border-slate-100 bg-white z-10">
+        <header class="p-6 border-b border-slate-100 bg-white z-10 flex-shrink-0">
             <h1 class="text-2xl font-bold text-slate-800">Regression Evaluation Metrics</h1>
             <p class="text-slate-500 text-sm mt-1">Understanding how we measure the accuracy of our predictions.</p>
 
@@ -72,17 +90,15 @@
                 <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
                     style="width: 0%"></div>
             </div>
-            <!-- <div class="flex justify-between text-xs text-slate-400 mt-2 font-medium" id="step-indicators">
-
-            </div> -->
         </header>
 
         <!-- Main Content Area -->
         <main class="flex-1 flex flex-col lg:flex-row overflow-hidden bg-white">
 
-            <!-- Left: Visualization (SVG) -->
+            <!-- Left: Visualization (SVG, Equations, or Code) -->
             <div id="visual-container"
-                class="lg:w-3/5 p-6 sm:p-10 flex items-center justify-center bg-slate-50/50 border-b lg:border-b-0 lg:border-r border-slate-100 relative">
+                class="lg:w-3/5 p-6 sm:p-10 flex items-center justify-center bg-slate-50/50 border-b lg:border-b-0 lg:border-r border-slate-100 relative overflow-hidden">
+
                 <!-- Default Grid and Graph Setup -->
                 <svg id="chart-svg" viewBox="-10 -10 120 120"
                     class="w-full h-full max-h-[400px] drop-shadow-sm overflow-visible text-slate-800">
@@ -90,14 +106,19 @@
                 </svg>
 
                 <!-- Equations Container (Hidden by default) -->
-                <div id="equations-container" class="hidden w-full h-full p-4 overflow-y-auto">
+                <div id="equations-container" class="hidden w-full h-full p-2 overflow-y-auto pr-4">
                     <!-- Equations will be injected here -->
+                </div>
+
+                <!-- Python Code Container (Hidden by default) -->
+                <div id="code-container" class="hidden w-full h-full p-2 overflow-y-auto pr-4">
+                    <!-- Python code & explanations will be injected here -->
                 </div>
             </div>
 
             <!-- Right: Explanations -->
             <div
-                class="lg:w-2/5 p-8 flex flex-col justify-center bg-white z-10 shadow-[-10px_0_15px_-5px_rgba(0,0,0,0.02)]">
+                class="lg:w-2/5 p-8 flex flex-col justify-center bg-white z-10 shadow-[-10px_0_15px_-5px_rgba(0,0,0,0.02)] overflow-y-auto">
                 <div id="text-content" class="fade-in">
                     <span id="step-badge"
                         class="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full mb-4 uppercase tracking-wider"></span>
@@ -112,7 +133,8 @@
         </main>
 
         <!-- Footer / Navigation -->
-        <footer class="p-4 sm:p-6 border-t border-slate-100 bg-white flex justify-between items-center z-10">
+        <footer
+            class="p-4 sm:p-6 border-t border-slate-100 bg-white flex justify-between items-center z-10 flex-shrink-0">
             <button id="btn-back"
                 class="px-6 py-2.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
                 &larr; Back
