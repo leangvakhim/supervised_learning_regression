@@ -6,11 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Understanding Regularization</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <style>
         /* Ensuring smooth font rendering */
         body {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom scrollbar for math container if needed on mobile */
+        .math-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .math-container::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -28,32 +40,55 @@
                 <p class="text-slate-400 text-sm mt-1">Interactive Step-by-Step Visualization</p>
             </div>
 
-            <!-- Progress Dots -->
+            <!-- Progress Dots Container -->
             <div class="flex space-x-2" id="progress-dots">
-                <div class="w-3 h-3 rounded-full bg-blue-500 transition-colors duration-300"></div>
-                <div class="w-3 h-3 rounded-full bg-slate-600 transition-colors duration-300"></div>
-                <div class="w-3 h-3 rounded-full bg-slate-600 transition-colors duration-300"></div>
-                <div class="w-3 h-3 rounded-full bg-slate-600 transition-colors duration-300"></div>
-                <div class="w-3 h-3 rounded-full bg-slate-600 transition-colors duration-300"></div>
+                <!-- Dots will be injected via JS -->
             </div>
         </div>
 
         <!-- Canvas Area -->
-        <div class="w-full bg-slate-50 border-b border-slate-100 p-4 md:p-8 flex justify-center">
+        <div class="w-full bg-slate-50 border-b border-slate-100 p-4 md:p-8 flex justify-center relative">
             <canvas id="simCanvas"
                 class="bg-white rounded-xl shadow-sm border border-slate-200 w-full max-w-[800px] h-auto aspect-[2/1]"></canvas>
+
+            <!-- Legend overlay for later steps -->
+            <div id="legend"
+                class="absolute top-8 right-12 bg-white/90 p-3 rounded-lg border border-slate-200 shadow-sm text-xs opacity-0 transition-opacity duration-500 hidden sm:block">
+                <div class="flex items-center gap-2 mb-1">
+                    <div class="w-3 h-3 rounded-full bg-blue-500"></div> Training Data
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 bg-orange-500"></div> Unseen Test Data
+                </div>
+
+                <!-- Expanded legend for Step 7 -->
+                <div id="legend-models" class="hidden mt-2 pt-2 border-t border-slate-200">
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <div class="w-4 h-1.5 bg-blue-500 rounded-full"></div> L2 (Ridge)
+                    </div>
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <div class="w-4 h-1.5 bg-emerald-500 rounded-full"></div> L1 (Lasso)
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-1.5 bg-purple-500 rounded-full"></div> Elastic Net
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Content Area -->
-        <div class="p-6 md:p-8 min-h-[180px] flex flex-col justify-center transition-opacity duration-300"
+        <div class="p-6 md:p-8 min-h-[260px] flex flex-col justify-center transition-opacity duration-300"
             id="text-content">
-            <h2 id="step-title" class="text-xl md:text-2xl font-bold text-slate-800 mb-3">1. The Goal: Finding the
-                Pattern</h2>
-            <p id="step-desc" class="text-slate-600 leading-relaxed text-base md:text-lg">
-                These blue dots represent our training data. In Machine Learning, our goal is to draw a line or curve
-                that captures the underlying pattern of these dots so we can make accurate future predictions. Click
-                'Next' to see what happens when a model tries too hard.
-            </p>
+            <div class="flex items-center gap-3 mb-3">
+                <h2 id="step-title" class="text-xl md:text-2xl font-bold text-slate-800">Title</h2>
+                <div id="penalty-badge"
+                    class="hidden px-3 py-1 rounded-full text-xs font-bold shadow-sm transition-opacity duration-500">
+                    Badge
+                </div>
+            </div>
+            <p id="step-desc" class="text-slate-600 leading-relaxed text-base"></p>
+            <div id="math-box"></div>
+            <div id="code-box" class="w-full hidden transition-opacity duration-300"></div>
         </div>
 
         <!-- Footer / Controls -->
@@ -62,11 +97,6 @@
                 class="px-5 py-2.5 rounded-lg font-semibold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 hover:text-slate-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                 &larr; Back
             </button>
-
-            <div id="penalty-badge"
-                class="hidden px-4 py-1.5 rounded-full bg-indigo-100 border border-indigo-200 text-indigo-700 text-sm font-bold shadow-sm transition-opacity duration-500">
-                Complexity Penalty Applied
-            </div>
 
             <button id="btn-next"
                 class="px-5 py-2.5 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
