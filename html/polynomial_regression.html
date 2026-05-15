@@ -9,7 +9,6 @@
     <style>
         body {
             background-color: #ffffff;
-            /* Subtly patterned background to give the white design some depth */
             background-image: radial-gradient(#f1f5f9 1px, transparent 1px);
             background-size: 20px 20px;
         }
@@ -22,13 +21,13 @@
         }
 
         .fade-in {
-            animation: fadeIn 0.4s ease-in-out;
+            animation: fadeIn 0.5s ease-out forwards;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(5px);
+                transform: translateY(10px);
             }
 
             to {
@@ -36,86 +35,217 @@
                 transform: translateY(0);
             }
         }
+
+        /* Custom styling for mathematical matrices */
+        .matrix-bracket-left {
+            border-left: 2px solid #94a3b8;
+            border-top: 2px solid #94a3b8;
+            border-bottom: 2px solid #94a3b8;
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+            width: 8px;
+        }
+
+        .matrix-bracket-right {
+            border-right: 2px solid #94a3b8;
+            border-top: 2px solid #94a3b8;
+            border-bottom: 2px solid #94a3b8;
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+            width: 8px;
+        }
+
+        .math-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .math-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
     </style>
 </head>
 
-<body class="text-slate-800 font-sans antialiased min-h-screen flex items-center justify-center p-4 sm:p-8">
+<!-- Updated body classes to flex-col to allow stacking both containers seamlessly -->
 
+<body class="text-slate-800 font-sans antialiased min-h-screen flex flex-col items-center py-12 px-4 sm:px-8 gap-8">
+
+    <!-- ORIGINAL INTERACTIVE VISUALIZATION -->
     <div
-        class="max-w-6xl w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden flex flex-col lg:flex-row">
+        class="max-w-6xl w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 overflow-hidden flex flex-col lg:flex-row shrink-0">
 
         <!-- Left Panel: Content & Controls -->
         <div
-            class="w-full lg:w-2/5 p-8 lg:p-12 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-slate-100">
+            class="w-full lg:w-[45%] p-6 sm:p-8 lg:p-12 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-slate-100">
 
             <div>
                 <div
-                    class="inline-flex items-center space-x-2 bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-semibold mb-6">
+                    class="inline-flex items-center space-x-2 bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-sm font-semibold mb-6">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                        </path>
                     </svg>
-                    <span>Machine Learning Concepts</span>
+                    <span>Real-World Machine Learning</span>
                 </div>
 
-                <h1 class="text-3xl font-bold text-slate-900 mb-2">Polynomial Regression</h1>
+                <h1 class="text-3xl font-extrabold text-slate-900 mb-2">Polynomial Regression</h1>
 
                 <!-- Dynamic Content Container -->
-                <div id="content-container" class="mt-8 min-h-[200px]">
-                    <div class="flex items-center text-sm font-medium text-slate-400 mb-2 uppercase tracking-wider"
+                <div id="content-container" class="mt-6 min-h-[280px]">
+                    <div class="flex items-center text-xs font-bold text-slate-400 mb-3 uppercase tracking-widest"
                         id="step-indicator">
-                        Step 1 of 6
+                        Step 1 of 8
                     </div>
-                    <h2 id="step-title" class="text-2xl font-bold text-slate-800 mb-4 fade-in">The Raw Data</h2>
-                    <p id="step-desc" class="text-slate-600 leading-relaxed text-lg fade-in">
-                        Welcome! Here we have some scattered data points. Imagine this shows the relationship between a
-                        person's age and their income. Notice how the points curve? They don't form a simple straight
-                        line.
-                    </p>
+                    <h2 id="step-title" class="text-2xl font-bold text-slate-800 mb-4 fade-in">The Real-World Scenario
+                    </h2>
+                    <div id="step-desc"
+                        class="text-slate-600 leading-relaxed text-[1.05rem] fade-in math-scroll overflow-x-auto pb-2">
+                        <!-- Content injected via JS -->
+                    </div>
                 </div>
             </div>
 
-            <!-- Navigation Controls -->
-            <div class="mt-10 flex items-center justify-between pt-6 border-t border-slate-100">
+            <div class="mt-8 flex items-center justify-between pt-6 border-t border-slate-100">
                 <button id="btn-prev"
-                    class="px-6 py-3 rounded-xl font-medium text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-                    &larr; Back
+                    class="px-5 py-2.5 rounded-xl font-medium text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                        </path>
+                    </svg> Back
                 </button>
 
                 <!-- Progress Dots -->
-                <div class="flex space-x-2" id="progress-dots">
+                <div class="flex space-x-1.5" id="progress-dots">
                     <!-- Dots generated by JS -->
                 </div>
 
                 <button id="btn-next"
-                    class="px-6 py-3 rounded-xl font-medium text-white bg-blue-600 hover:bg-blue-700 shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-                    Next &rarr;
+                    class="px-5 py-2.5 rounded-xl font-medium text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm shadow-emerald-200 transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed flex items-center">
+                    Next <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
                 </button>
             </div>
         </div>
 
         <!-- Right Panel: Canvas Visualization -->
-        <div class="w-full lg:w-3/5 p-6 lg:p-10 flex flex-col items-center justify-center bg-slate-50/50">
+        <div class="w-full lg:w-[55%] p-4 sm:p-8 flex flex-col items-center justify-center bg-slate-50/50 relative">
+
+            <!-- Axis Labels (Overlay) -->
+            <div
+                class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 -rotate-90 text-xs sm:text-sm font-semibold text-slate-400 tracking-wider">
+                &larr; CROP YIELD (Y)
+            </div>
+            <div
+                class="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 text-xs sm:text-sm font-semibold text-slate-400 tracking-wider">
+                FERTILIZER AMOUNT (X) &rarr;
+            </div>
 
             <!-- Legend -->
-            <div class="flex flex-wrap justify-center gap-4 mb-6 text-sm font-medium">
-                <div class="flex items-center"><span class="w-3 h-3 rounded-full bg-slate-800 mr-2"></span> Data Points
-                </div>
+            <div class="flex flex-wrap justify-center gap-3 sm:gap-5 mb-4 text-xs sm:text-sm font-medium z-10 pl-6">
+                <div class="flex items-center"><span
+                        class="w-2.5 h-2.5 rounded-full bg-slate-800 mr-2 shadow-sm"></span> Data Points</div>
                 <div class="flex items-center opacity-30 transition-opacity duration-300" id="legend-linear"><span
                         class="w-4 h-1 bg-red-500 mr-2 rounded"></span> Linear (Underfit)</div>
                 <div class="flex items-center opacity-30 transition-opacity duration-300" id="legend-poly"><span
-                        class="w-4 h-1 bg-emerald-500 mr-2 rounded"></span> Polynomial (Good Fit)</div>
+                        class="w-4 h-1 bg-emerald-500 mr-2 rounded"></span> Polynomial (Ideal)</div>
                 <div class="flex items-center opacity-30 transition-opacity duration-300" id="legend-overfit"><span
-                        class="w-4 h-1 bg-purple-500 mr-2 rounded"></span> High-Degree (Overfit)</div>
+                        class="w-4 h-1 bg-purple-500 mr-2 rounded"></span> Degree 15 (Overfit)</div>
             </div>
 
-            <div class="w-full bg-white rounded-2xl shadow-sm border border-slate-200 p-2">
-                <canvas id="viz-canvas" width="800" height="500"></canvas>
+            <div class="w-full max-w-2xl bg-white rounded-2xl shadow-sm border border-slate-200 p-2 ml-4 mb-4">
+                <!-- Using an internal coordinate system of 800x500 to keep math consistent -->
+                <canvas id="viz-canvas" width="800" height="500" class="rounded-xl"></canvas>
             </div>
 
         </div>
     </div>
+
+
+    <!-- NEW PYTHON TUTORIAL SECTION -->
+    <!-- <div
+        class="max-w-6xl w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 overflow-hidden p-6 sm:p-8 lg:p-12 mb-12">
+        <div
+            class="inline-flex items-center space-x-2 bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-semibold mb-4">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+            </svg>
+            <span>Python Implementation</span>
+        </div>
+
+        <h2 class="text-3xl font-extrabold text-slate-900 mb-6">Coding it with Scikit-Learn</h2>
+        <p class="text-slate-600 leading-relaxed text-[1.05rem] mb-8">
+            In Python, we don't have to manually calculate the Design Matrix. Instead, we use the
+            <code>PolynomialFeatures</code> transformer from <strong>Scikit-Learn</strong> to expand our inputs, and
+            then feed them into a standard <code>LinearRegression</code> model. Here is exactly how to build the model
+            shown above.
+        </p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">1. Import Libraries</h3>
+                    <p class="text-slate-600 text-sm mb-3">We need <code>numpy</code> for math arrays, and our two
+                        critical machine learning tools from <code>sklearn</code>.</p>
+                    <div
+                        class="bg-slate-900 rounded-xl p-4 overflow-x-auto shadow-inner text-sm font-mono text-slate-300">
+                        <pre><code><span class="text-pink-400">import</span> numpy <span class="text-pink-400">as</span> np
+<span class="text-pink-400">from</span> sklearn.preprocessing <span class="text-pink-400">import</span> PolynomialFeatures
+<span class="text-pink-400">from</span> sklearn.linear_model <span class="text-pink-400">import</span> LinearRegression</code></pre>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">2. Prepare the Data</h3>
+                    <p class="text-slate-600 text-sm mb-3">Assume <code>X</code> is our list of fertilizer amounts, and
+                        <code>y</code> is our list of crop yields.</p>
+                    <div
+                        class="bg-slate-900 rounded-xl p-4 overflow-x-auto shadow-inner text-sm font-mono text-slate-300">
+                        <pre><code><span class="text-slate-500"># X shape: (samples, 1), y shape: (samples, 1)</span>
+X = np.array([[<span class="text-orange-300">100</span>], [<span class="text-orange-300">200</span>], [<span class="text-orange-300">400</span>], [<span class="text-orange-300">600</span>], [<span class="text-orange-300">700</span>]])
+y = np.array([[<span class="text-orange-300">45</span>],  [<span class="text-orange-300">65</span>],  [<span class="text-orange-300">80</span>],  [<span class="text-orange-300">60</span>],  [<span class="text-orange-300">30</span>]])</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">3. Transform Features (The Magic Step)</h3>
+                    <p class="text-slate-600 text-sm mb-3">This creates our new $X^2$ feature. It takes the array
+                        <code>[X]</code> and transforms it into the matrix <code>[1, X, X²]</code>.</p>
+                    <div
+                        class="bg-slate-900 rounded-xl p-4 overflow-x-auto shadow-inner text-sm font-mono text-slate-300">
+                        <pre><code><span class="text-slate-500"># Set degree=2 for a quadratic curve (Parabola)</span>
+poly = PolynomialFeatures(degree=<span class="text-orange-300">2</span>)
+
+<span class="text-slate-500"># Create the expanded Design Matrix</span>
+X_poly = poly.fit_transform(X)</code></pre>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">4. Train the Model</h3>
+                    <p class="text-slate-600 text-sm mb-3">Now, we just train a standard Linear Regression model on our
+                        new, expanded polynomial features.</p>
+                    <div
+                        class="bg-slate-900 rounded-xl p-4 overflow-x-auto shadow-inner text-sm font-mono text-slate-300">
+                        <pre><code>model = LinearRegression()
+
+<span class="text-slate-500"># The model automatically computes the Normal Equation</span>
+<span class="text-slate-500"># to find the optimal &beta; weights!</span>
+model.fit(X_poly, y)
+
+<span class="text-slate-500"># Predict new data</span>
+y_predictions = model.predict(X_poly)</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
 
     <script src="../js/polynomial_regression.js"></script>
 </body>
